@@ -1,0 +1,43 @@
+# Environment
+.env
+config.yaml
+.envrc
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+.python-version
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Data — generated files are ignored, but example templates are tracked
+data/*
+!data/*.example.md
+reports/
+*.log
+logs/
+*.db
+*.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+article
