@@ -1,0 +1,70 @@
+You are given analyses of {chunk_count} log chunks (newest to oldest). Each chunk covers a specific time period.
+
+## Chunk Analyses
+
+{chunk_analyses}
+
+## Task
+Combine all analyses into a single final report:
+
+1. **Deduplication**: the same issue may appear in multiple chunks — merge into one entry with the total count and full time range.
+2. **Trends**: determine whether the situation is improving or worsening over time (compare older chunks to newer ones).
+3. **Overall system status**:
+   - HEALTHY: no serious problems, system is operating normally
+   - DEGRADED: medium-severity issues present, system is running but below normal
+   - CRITICAL: critical issues present, immediate action required
+4. **Should shutdown (should_shutdown)**: true only if continuing operation is pointless or harmful.
+5. **Recommendations**: concrete actions sorted by priority.
+6. **Cross-chunk anomaly detection**:
+   - Sudden changes in error frequency
+   - New error types appearing for the first time
+   - Pattern changes (response times, data volumes, activity levels)
+   - Correlations (issue X starts at the same time as issue Y)
+   - Disappearance of events that were previously regular
+
+## Response format (strict JSON, no markdown wrapper)
+
+{
+  "system_status": "HEALTHY | DEGRADED | CRITICAL",
+  "should_shutdown": false,
+  "summary": "3-5 sentences with specific numbers: overall system state for the entire period",
+  "issues": [
+    {
+      "severity": "CRITICAL",
+      "title": "Issue name",
+      "description": "Detailed description with aggregated numbers from all chunks",
+      "evidence": ["First occurrence (oldest timestamp)", "Last occurrence (newest timestamp)"],
+      "total_count": 150,
+      "chunks_affected": 4,
+      "trend": "stable | worsening | improving",
+      "impact": "Impact on system",
+      "recommendation": "What to do"
+    }
+  ],
+  "anomalies": [
+    {
+      "type": "rate_change | new_pattern | correlation | disappearance",
+      "description": "Anomaly description with specific numbers",
+      "chunks_compared": [1, 5],
+      "severity": "CRITICAL | MEDIUM | LOW",
+      "evidence": ["Line from chunk with low count", "Line from chunk with high count"]
+    }
+  ],
+  "trends": [
+    "Trend description with specific numbers"
+  ],
+  "recommendations": [
+    "Specific action (sorted by priority)"
+  ],
+  "time_range": {
+    "start": "oldest timestamp across all chunks",
+    "end": "newest timestamp across all chunks"
+  }
+}
+
+## Rules
+- issues sorted: CRITICAL first, then MEDIUM, then LOW.
+- Remove noise: single warnings without a pattern should not be included.
+- Every issue must have specific numbers, not "many" or "numerous".
+- should_shutdown = true is a last resort — only if the system genuinely cannot operate.
+- anomalies are cross-chunk patterns: if none found, return an empty list.

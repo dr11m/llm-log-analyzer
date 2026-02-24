@@ -1,0 +1,56 @@
+Analyze a chunk of application logs.
+
+## Context
+- Time range: {chunk_start_time} - {chunk_end_time}
+- Lines: {chunk_line_count}
+- Position: Chunk {chunk_position} (1 = newest)
+
+## Logs
+```
+{log_lines}
+```
+
+## Task
+Review the logs and identify everything worth attention:
+- Anomalous behavior (deviations from normal behavior described in project docs)
+- Errors, exceptions, failures and their frequency
+- Performance degradation
+- Suspicious patterns (recurring errors, latency growth, data loss)
+- Anything that may indicate a problem
+
+For each issue found, determine:
+- Severity (CRITICAL / MEDIUM / LOW) and the reasoning
+- Specific log lines as evidence (with timestamps)
+- How it affects system operation
+- What action is recommended
+
+## Response format (strict JSON, no markdown wrapper)
+
+{
+  "issues": [
+    {
+      "severity": "CRITICAL",
+      "title": "Short issue name",
+      "description": "Detailed description with exact numbers. Example: 42 of 50 requests (84%) returned error 429 during 01:08-01:12",
+      "evidence": [
+        "FIRST log line showing the problem (full line with timestamp)",
+        "LAST log line showing the problem (full line with timestamp)"
+      ],
+      "count": 42,
+      "impact": "How this affects system operation",
+      "recommendation": "What to do"
+    }
+  ],
+  "summary": "2-3 sentences: what was happening in this time window, overall state",
+  "time_range": {
+    "start": "first timestamp from the logs",
+    "end": "last timestamp from the logs"
+  }
+}
+
+## Rules
+- One root cause = one issue. Do not duplicate.
+- Use EXACT numbers from the logs, not "many" or "numerous".
+- evidence: first and last line of the issue to show the time span.
+- If no serious issues found — return empty issues and write in summary that everything is normal.
+- Do NOT invent anything. Only what is visible in the logs.

@@ -1,0 +1,105 @@
+You are given the source code and documentation of a software project. Your task is to produce two documents that will be used by the log analysis system for this project.
+
+
+
+## Project Source Data
+
+
+
+{project_content}
+
+
+
+## Task
+
+
+
+Produce TWO documents in the format described below. Separate them with the marker `===SEPARATOR===`.
+
+
+
+### DOCUMENT 1: project_context.md
+
+
+
+Describe the project so that the log analysis system understands:
+
+
+
+1. **What the system does** — full workflow from start to finish
+
+2. **Components and their roles** — which modules are responsible for what
+
+3. **Critical dependencies** — external services and resources required for operation; what the system cannot function without
+
+4. **Normal operating metrics** — which metrics are considered normal (if present in docs/code)
+
+5. **Log format** — which modules produce logs, which levels (DEBUG/INFO/WARNING/ERROR), line format
+
+6. **Normal vs anomalous behavior** — what constitutes an error vs expected behavior (e.g., an item rejected by a filter is normal, not an error)
+
+
+
+Write concisely and to the point. No filler. The goal is to provide context for log analysis.
+
+
+
+### DOCUMENT 2: analysis_rules.md
+
+
+
+Define classification rules for issues found during log analysis:
+
+
+
+1. **CRITICAL** — examples of situations where the system is fully or critically broken
+
+   - Specific log patterns indicating a critical problem
+
+   - Why it is critical (impact on workflow)
+
+
+
+2. **MEDIUM** — examples of degradation where the system runs but below normal
+
+   - Specific patterns
+
+   - Thresholds (if known from docs/code)
+
+
+
+3. **LOW** — minor issues that do not affect core operation
+
+   - What can be ignored
+
+
+
+4. **NOT an issue** — what looks like an error but is actually expected behavior
+
+   - Normal deviations, filters, expected rejections
+
+
+
+## Response Format
+
+```
+[DOCUMENT_1]
+
+(content of project_context.md in markdown)
+
+===SEPARATOR===
+
+[DOCUMENT_2]
+
+(content of analysis_rules.md in markdown)
+```
+
+IMPORTANT:
+
+- Write in English
+
+- Use only information from the provided data; do not invent anything
+
+- Be specific — use the names of services, modules, and methods from the code
+
+- If something is not present in the data — do not invent it; simply omit it

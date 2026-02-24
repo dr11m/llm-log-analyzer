@@ -1,0 +1,30 @@
+Your objective is to perform a deep analysis of a large log file {PATH_TO_LOG_FILE}, bypassing your context window limitations using a Map-Reduce approach.
+The target context size for a single analysis chunk is approximately {X} tokens (assume 1 token = 3.5 characters). We need to analyze {N} such chunks from the end of the file.
+All working files and results must be saved in the `llm_log_analysis` directory. The final report should be saved in `llm_log_analysis/result/report`.
+
+Strictly follow this algorithm without skipping any steps:
+
+STEP 1: CONTEXT GATHERING
+Before starting, read and carefully study all files in the `docs/` directory. Use the gathered information (project structure, workflow, specific logic) as foundational context for accurate log analysis.
+
+STEP 2: PREPARATION AND CHUNKING (MAP)
+1. Create directories `llm_log_analysis/chunks` and `llm_log_analysis/summaries`.
+2. Calculate the target size of a single chunk in bytes/characters: {X} * 3.5.
+3. Using the terminal (e.g., `tail` and `split` commands) or by writing a short Python script, extract a portion from the end of {PATH_TO_LOG_FILE} equal to {N} * {X} * 3.5 characters in size.
+4. Split this extracted portion into exactly {N} chunk files inside `llm_log_analysis/chunks` (e.g., chunk_1.log, chunk_2.log ... chunk_N.log). Verify the files are created and do not exceed the context limit.
+
+STEP 3: PARALLEL ANALYSIS (REDUCE - Iteration 1)
+For each of the {N} chunk files in `llm_log_analysis/chunks`, perform the following (if your environment supports sub-agents, spawn them in parallel; otherwise, do it sequentially):
+1. Read the contents of the chunk.
+2. Extract the following information in strict Markdown format:
+   - Critical errors (Exceptions, FATAL, ERROR) and their occurrence frequency.
+   - Performance anomalies (timeouts, slow queries).
+   - Suspicious behavioral patterns.
+3. Save the analysis result of each chunk into a separate file in `llm_log_analysis/summaries` (e.g., summary_1.md, summary_2.md).
+
+STEP 4: FINAL AGGREGATION AND REPORTING (REDUCE - Iteration 2)
+1. Create directory `llm_log_analysis/report`.
+2. Read all the generated summary_*.md files from `llm_log_analysis/summaries`.
+3. Merge and synthesize them into a single `llm_log_analysis/report/final_log_analysis_report.md`.
+4. The final report must contain: Overall statistics across all chunks, a deduplicated list of the most frequent critical errors from the entire analyzed volume, a timeline of the failure progression (if applicable), and your actionable recommendations for fixing the issues.
+5. Clean up and delete all temporary chunk and summary files after the report is generated.

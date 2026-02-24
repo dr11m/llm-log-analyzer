@@ -1,0 +1,15 @@
+Goal: Perform a Map-Reduce summarization of the latest logs in {PATH_TO_LOG_FILE}.
+Constraints: Analyze only the last {N} chunks. Let 1 chunk be roughly {X} lines (or equivalent to {X} tokens).
+
+All working files, chunks and results must be stored in the `llm_log_analysis` directory. The final aggregated report must be placed in `llm_log_analysis/result/report`.
+
+Execution Instructions:
+1. Create directories `llm_log_analysis/temp_logs` and `llm_log_analysis/report`.
+2. Use the bash command `tail -n [N * X] {PATH_TO_LOG_FILE}` to extract the required volume from the end of the file, pipe it to `split -l {X}` to instantly slice the file into {N} parts inside the `llm_log_analysis/temp_logs/` directory.
+3. Loop through (or spawn sub-agents for) every created file in `llm_log_analysis/temp_logs/`. The prompt for parsing each chunk is: "Extract tracebacks, group repeating Warnings/Errors, identify latency spikes > 1000ms. Save the condensed summary as JSON or MD alongside the chunks in temp_logs."
+4. Perform Aggregation. Read all the generated chunk summaries into your context at once.
+5. Generate an `llm_log_analysis/report/INCIDENT_REPORT.md` with the following structure:
+   - Root Cause Analysis (identify what broke first based on the timeline across chunks).
+   - Top-5 most spammy errors (with occurrence counts).
+   - Suggested code or infrastructure fixes.
+Act autonomously. If tool calls fail, fix the syntax and retry immediately.

@@ -1,0 +1,64 @@
+# AI Log Analyzer Configuration
+# Copy this file to config.yaml and customize for your project
+
+# Paths
+project:
+  # Path to log file (relative or absolute)
+  log_file: "../worflow_data/analyzer.log"
+
+  # Retention period (days)
+  retention_days: 7
+
+# LLM API settings
+api:
+  # Model name (depends on your provider)
+  # GLM: glm-4.7-flash (fastest), glm-4.7 (balanced)
+  model: "glm-4.7-flash"
+  # Base URL via .env: GLM_BASE_URL
+
+  # Language for prompts and generated reports: "ru" or "en"
+  # The prompt files live in prompts/ru/ and prompts/en/
+  prompts_language: "ru"
+
+  # Sampling temperature (0.0 = deterministic, 1.0 = creative)
+  temperature: 0.3
+
+  # Token pricing in USD per 1,000 tokens (used for cost tracking)
+  # Update these when using a different model or provider
+  pricing:
+    input_per_1k: 0.001
+    output_per_1k: 0.002
+
+# Analysis parameters
+analysis:
+  # Number of chunks to analyze
+  num_chunks: 5
+
+  # --- Chunking mode (choose one) ---
+
+  # Option 1: Token-based (recommended)
+  # Total token budget split across num_chunks
+  # Example: 150000 tokens / 5 chunks = 30000 tokens per chunk
+  max_total_tokens: 0  # 0 = disabled, use line-based
+
+  # Option 2: Line-based (fallback when max_total_tokens = 0)
+  chunk_size_lines: 2000
+
+  # Max cost per analysis in USD (safety limit)
+  max_cost_usd: 1.0
+
+  # Which combine prompt to use:
+  #   "create_report"        — dedup + trends
+  #   "create_report_with_anomalies"  — dedup + trends + cross-chunk anomaly detection
+  combine_prompt: "create_report_with_anomalies"
+
+# Storage
+storage:
+  state_file: "./data/state.json"
+  reports_dir: "./reports"
+  data_dir: "./data"
+
+# Run mode
+mode:
+  check_interval_hours: 3
+
