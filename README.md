@@ -285,6 +285,11 @@ The abstraction layer handles the rest — chunking, reporting, state management
 
 ~$0.15-0.30 per analysis with GLM-4.7-flash (N+1 API calls).
 
+## Related Projects
+
+- [log-insight](https://github.com/dr11m/log-insight-skill) — Claude Code skill, parallel log audit via sub-agents (inductive approach)
+- [log-validate](https://github.com/dr11m/log-validate-skill) — Claude Code skill, code-aware log validation via grep (deductive approach)
+
 ---
 
 ## Example Report
